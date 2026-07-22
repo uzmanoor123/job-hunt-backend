@@ -5,13 +5,15 @@ const app = express();
 app.use(express.json());
 const cors = require("cors");
 app.use(cors({ origin: "*" }));
+const authRoutes = require('./routes/authRoutes')
+const uploadRoutes = require('./routes/uploadRoutes')
 
 app.get('/', (req, res)=>{
     res.send("Backend is running");
 });
-const authRoutes= require("./routes/authRoutes");
-app.use("/", authRoutes);  
 
+app.use("/", uploadRoutes );
+app.use("/", authRoutes);  
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB Connected"))
