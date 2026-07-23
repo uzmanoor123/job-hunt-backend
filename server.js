@@ -7,13 +7,14 @@ const cors = require("cors");
 app.use(cors({ origin: "*" }));
 const authRoutes = require('./routes/authRoutes')
 const uploadRoutes = require('./routes/uploadRoutes')
-
+const profileRoutes = require('./routes/profileRoutes')
 app.get('/', (req, res)=>{
     res.send("Backend is running");
 });
 
 app.use("/", uploadRoutes );
 app.use("/", authRoutes);  
+app.use("/profile", profileRoutes)
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB Connected"))

@@ -4,6 +4,6 @@ const router = express.Router();
 const upload = require("../middleware/multerMiddleware")
 const {uploadResume} = require("../controllers/uploadController")
 
- router.post("/upload", upload.single("resume"), uploadResume )
+ router.post("/upload", upload.single("resume"), uploadResume );
 
 module.exports = router;

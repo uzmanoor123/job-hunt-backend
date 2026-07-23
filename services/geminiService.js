@@ -5,20 +5,26 @@ const openai = new OpenAI({
     apiKey: process.env.GEMINI_API_KEY,
     baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/"
 });
-async function testAI() {
+async function callGeminiLLM(systemPrompt, userPrompt) {
 const response =   await openai.chat.completions.create({
     model: "gemini-3.5-flash",
     messages: [
         {   role: "system",
-            content: "You are a helpful assistant." 
+            content: systemPrompt 
         },
         {
             role: "user",
-            content: "Explain to me how AI works",
+            content: userPrompt,
         },
     ],
+    response_format:{
+        type: "json_object",
+    },
 });
 
-console.log(response.choices[0].message.content);
+const profile = JSON.parse(response.choices[0].message.content);
+console.log(profile)
+return profile
 }
-testAI();
+
+module.exports = {callGeminiLLM};
