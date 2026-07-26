@@ -9,8 +9,12 @@ const profileSchema = new mongoose.Schema(
     email: {
       type: String,
       required: true,
-      unique: true,
       trim: true,
+    },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required:true 
     },
     phone: {
       type: String,
@@ -21,9 +25,11 @@ const profileSchema = new mongoose.Schema(
         type: String,
       },
     ],
-    summary: {
-      type: String,
-    },
+    summary: [
+      {
+        type: String,
+      },
+    ],
     education: [
       {
         degree: String,
@@ -37,13 +43,6 @@ const profileSchema = new mongoose.Schema(
         role: String,
         duration: String,
         description: String,
-      },
-    ],
-    projects: [
-      {
-        title: String,
-        description: String,
-        technologies: [String],
       },
     ],
     certificate: [

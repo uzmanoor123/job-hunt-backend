@@ -4,16 +4,12 @@ const Profile = require("../models/Profile");
 
 const { callGeminiLLM } = require("../services/geminiService");
 const uploadResume = async (req, res) => {
-
   try {
-
     if (!req.file) {
-
       return res.status(400).json({
-        success:false,
-        message:"Failed to upload resume"
+        success: false,
+        message: "Failed to upload resume",
       });
-
     }
     const fileBuffer = fs.readFileSync(req.file.path);
     const data = await pdfParse(fileBuffer);
@@ -27,54 +23,60 @@ const uploadResume = async (req, res) => {
       "email":"",
       "phone":"",
       "skills":[],
+      "summary":[],
       "education":[],
       "projects":[],
       "experience":[],
       "certificate":[],
-      "languages":[]
+      "languages":[],
     }
     If any field is missing return empty string or empty array.
     Do not write markdown.
     Do not explain anything.
     `;
     const userPrompt = data.text;
-    const profile = await callGeminiLLM(
-      systemPrompt,
-      userPrompt
+    const profile = await callGeminiLLM(systemPrompt, userPrompt);
+    const profileData = {
+      ...profile,
+      user: req.user.id
+    }
+    const savedProfile = await Profile.findOneAndUpdate(
+      {
+        user: req.user.id
+      },
+      profileData,
+      {
+        new: true,
+        upsert: true,
+      },
     );
-
-    const savedProfile = await Profile.create(profile);
     res.status(200).json({
-      success:true,
-      message:"Resume uploaded successfully",
-      savedProfile
-
+      success: true,
+      message: "Resume uploaded successfully",
+      savedProfile,
     });
-  } catch(error){
+  } catch (error) {
     console.log(error);
     res.status(500).json({
-      success:false,
-      message:error.message
-
+      success: false,
+      message: error.message,
     });
-
   }
 };
-const getProfile = async(req,res)=>{
-
-  try{
-    const profile = await Profile.findOne();
+const getProfile = async (req, res) => {
+  try {
+    const profile = await Profile.findOne({
+      user: req.user.id 
+    });
     res.status(200).json(profile);
-
-  }
-  catch(error){
+  } catch (error) {
     res.status(500).json({
-      message:error.message
+      message: error.message,
     });
   }
 };
 
 module.exports = {
   uploadResume,
-  getProfile
+  getProfile,
 };
