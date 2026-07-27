@@ -20,16 +20,15 @@ const profileSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+      summary: {
+      type: String
+    },
     skills: [
       {
         type: String,
       },
     ],
-    summary: [
-      {
-        type: String,
-      },
-    ],
+
     education: [
       {
         degree: String,
@@ -45,18 +44,7 @@ const profileSchema = new mongoose.Schema(
         description: String,
       },
     ],
-    certificate: [
-      {
-        name: String,
-        issuer: String,
-        year: String,
-      },
-    ],
-    languages: [
-      {
-        type: String,
-      },
-    ],
+
   },
   {
     timestamps: true,

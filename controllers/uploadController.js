@@ -14,35 +14,59 @@ const uploadResume = async (req, res) => {
     const fileBuffer = fs.readFileSync(req.file.path);
     const data = await pdfParse(fileBuffer);
     const systemPrompt = `
-    You are an expert resume parser.
-    Extract resume information and return only valid JSON format.
-    Return this structure:
-
+You are an expert resume parser.
+Extract information from the resume and return ONLY valid JSON.
+Return this exact structure:
+{
+  "name": "",
+  "email": "",
+  "phone": "",
+  "summary": "",
+  "skills": [
+    ""
+  ],
+  "education": [
     {
-      "name":"",
-      "email":"",
-      "phone":"",
-      "skills":[],
-      "summary":[],
-      "education":[],
-      "projects":[],
-      "experience":[],
-      "certificate":[],
-      "languages":[],
+      "degree": "",
+      "institute": "",
+      "year": ""
     }
-    If any field is missing return empty string or empty array.
-    Do not write markdown.
-    Do not explain anything.
-    `;
+  ],
+  "experience": [
+    {
+      "role": "",
+      "company": "",
+      "duration": "",
+      "description": ""
+    }
+  ]
+}
+
+Rules:
+ Return only valid JSON.
+ Do not use markdown.
+ Do not explain anything.
+ If a field is missing, return an empty string or an empty array.
+  Summary should be concise (maximum 3-4 lines).
+ Only include professional work experience (internships, jobs, freelancing, volunteer work).
+ Do NOT include academic, personal, or university projects in the experience section.
+ If there is no professional experience, return "experience": [].
+ Education must be an array of objects.
+ Skills must be an array of strings.
+`;
     const userPrompt = data.text;
+    console.log("PDF Parsed");
     const profile = await callGeminiLLM(systemPrompt, userPrompt);
+    console.log("Gemini Response:", profile);
+
+    console.log("Saving to Mongo...");
     const profileData = {
       ...profile,
-      user: req.user.id
-    }
+      user: req.user.id,
+    };
     const savedProfile = await Profile.findOneAndUpdate(
       {
-        user: req.user.id
+        user: req.user.id,
       },
       profileData,
       {
@@ -66,7 +90,7 @@ const uploadResume = async (req, res) => {
 const getProfile = async (req, res) => {
   try {
     const profile = await Profile.findOne({
-      user: req.user.id 
+      user: req.user.id,
     });
     res.status(200).json(profile);
   } catch (error) {
