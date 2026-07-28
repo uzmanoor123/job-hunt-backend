@@ -8,6 +8,7 @@ app.use(cors({ origin: "*" }));
 const authRoutes = require("./routes/authRoutes");
 const uploadRoutes = require("./routes/uploadRoutes");
 const profileRoutes = require("./routes/profileRoutes");
+const jobRoutes=require("./routes/jobRoutes");
 app.get("/", (req, res) => {
   res.send("Backend is running!!");
 });
@@ -15,6 +16,7 @@ app.get("/", (req, res) => {
 app.use("/", uploadRoutes);
 app.use("/", authRoutes);
 app.use("/profile", profileRoutes);
+app.use("/jobs", jobRoutes)
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {

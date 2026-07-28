@@ -25,6 +25,7 @@ Return this exact structure:
   "skills": [
     ""
   ],
+  "jobTitle":"",
   "education": [
     {
       "degree": "",
@@ -53,6 +54,10 @@ Rules:
  If there is no professional experience, return "experience": [].
  Education must be an array of objects.
  Skills must be an array of strings.
+
+ <IMPORTANT>
+ must provide jobTitle according to resume
+ </IMPORTANT>
 `;
     const userPrompt = data.text;
     console.log("PDF Parsed");
@@ -89,9 +94,14 @@ Rules:
 };
 const getProfile = async (req, res) => {
   try {
+    console.log("Logged in user id:", req.user.id);
+
     const profile = await Profile.findOne({
       user: req.user.id,
     });
+
+    console.log("Profile Found:", profile);
+
     res.status(200).json(profile);
   } catch (error) {
     res.status(500).json({

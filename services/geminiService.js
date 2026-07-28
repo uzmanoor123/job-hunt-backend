@@ -1,31 +1,35 @@
-const { OpenAI } = require("openai");
-const dotenv = require("dotenv")
-dotenv.config();
-const openai = new OpenAI({
-    apiKey: process.env.GEMINI_API_KEY,
-    baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/"
+const { GoogleGenAI } = require("@google/genai");
+require("dotenv").config();
+
+const ai = new GoogleGenAI({
+  apiKey: process.env.GEMINI_API_KEY,
 });
+
 async function callGeminiLLM(systemPrompt, userPrompt) {
-    const response = await openai.chat.completions.create({
-        model: "gemini-3.5-flash",
-        messages: [
-            {
-                role: "system",
-                content: systemPrompt
-            },
-            {
-                role: "user",
-                content: userPrompt,
-            },
-        ],
-        response_format: {
-            type: "json_object",
-        },
+  try {
+    console.log("Calling Gemini...");
+
+    const response = await ai.models.generateContent({
+      model: "gemini-3.5-flash",
+      contents: `${systemPrompt}\n\n${userPrompt}`,
     });
 
-    const profile = JSON.parse(response.choices[0].message.content);
-    console.log(profile)
-    return profile
+    console.log("Full Response:");
+    console.log(response);
+
+    console.log("Response Text:");
+    console.log(response.text);
+
+    const profile = JSON.parse(response.text);
+
+    return profile;
+  } catch (err) {
+    console.error("Gemini Error:");
+    console.error(err);
+    throw err;
+  }
 }
 
-module.exports = { callGeminiLLM };
+module.exports = {
+  callGeminiLLM,
+};

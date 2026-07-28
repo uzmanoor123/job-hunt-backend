@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon server.js",
     "start": "node server.js",
-    "lint" : "npx prettier --write ."
+    "lint": "npx prettier --write ."
   },
   "repository": {
     "type": "git",
@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/uzmanoor123/job-hunt-backend#readme",
   "dependencies": {
+    "@google/genai": "^2.13.0",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
@@ -30,7 +31,6 @@
     "mongoose": "^9.7.4",
     "multer": "^2.2.0",
     "nodemon": "^3.1.14",
-    "openai": "^6.48.0",
     "pdf-parse": "^1.1.1"
   }
 }

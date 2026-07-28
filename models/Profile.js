@@ -16,6 +16,11 @@ const profileSchema = new mongoose.Schema(
       ref: 'User',
       required:true 
     },
+    jobTitle: {
+      type: String,
+      trim: true,
+      required: true,
+    },
     phone: {
       type: String,
       trim: true,
@@ -44,6 +49,9 @@ const profileSchema = new mongoose.Schema(
         description: String,
       },
     ],
+    jobs:[
+      mongoose.Schema.Types.Mixed
+    ]
 
   },
   {
