@@ -69,6 +69,7 @@ Rules:
       ...profile,
       user: req.user.id,
     };
+    console.log("Saving Profile For User:", req.user.id);
     const savedProfile = await Profile.findOneAndUpdate(
       {
         user: req.user.id,
@@ -79,6 +80,7 @@ Rules:
         upsert: true,
       },
     );
+    console.log(savedProfile);
     res.status(200).json({
       success: true,
       message: "Resume uploaded successfully",
@@ -99,6 +101,8 @@ const getProfile = async (req, res) => {
     const profile = await Profile.findOne({
       user: req.user.id,
     });
+    console.log("Current Logged User:", req.user.id);
+console.log("Fetched Profile:", profile);
 
     console.log("Profile Found:", profile);
 
