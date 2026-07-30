@@ -1,6 +1,7 @@
 const fs = require("fs");
 const pdfParse = require("pdf-parse");
 const Profile = require("../models/Profile");
+const {getJobsFromJSearch} = require('../services/jobService')
 
 const { callGeminiLLM } = require("../services/geminiService");
 const uploadResume = async (req, res) => {
@@ -64,7 +65,6 @@ Rules:
     const profile = await callGeminiLLM(systemPrompt, userPrompt);
     console.log("Gemini Response:", profile);
 
-    console.log("Saving to Mongo...");
     const profileData = {
       ...profile,
       user: req.user.id,
@@ -80,6 +80,10 @@ Rules:
         upsert: true,
       },
     );
+    const jobs = await getJobsFromJSearch(savedProfile);
+    savedProfile.jobs = jobs
+    await savedProfile.save();
+    
     console.log(savedProfile);
     res.status(200).json({
       success: true,
@@ -101,10 +105,6 @@ const getProfile = async (req, res) => {
     const profile = await Profile.findOne({
       user: req.user.id,
     });
-    console.log("Current Logged User:", req.user.id);
-console.log("Fetched Profile:", profile);
-
-    console.log("Profile Found:", profile);
 
     res.status(200).json(profile);
   } catch (error) {

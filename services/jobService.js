@@ -13,9 +13,7 @@ const getJobsFromJSearch = async (profile) => {
             }
         );
         const data = await response.json();
-
         const jobs = (data.data.jobs || []).map((job) => ({
-            
             id: job.job_id,
             title: job.job_title,
             company: job.employer_name || "Unknown",
@@ -23,12 +21,6 @@ const getJobsFromJSearch = async (profile) => {
                 job.job_city
                     ? `${job.job_city}, ${job.job_country}`
                     : "Remote",
-            salary:
-                job.job_salary_string ||
-                job.job_salary ||
-                (job.job_min_salary && job.job_max_salary
-                    ? `$${job.job_min_salary} - $${job.job_max_salary}`
-                    : "Not specified"),
             description:
                 job.job_description
                     ?.substring(0, 200) + "...",
