@@ -3,7 +3,8 @@ const pdfParse = require("pdf-parse");
 const Profile = require("../models/Profile");
 const {getJobsFromJSearch} = require('../services/jobService')
 
-const { callGeminiLLM } = require("../services/geminiService");
+// const { callGeminiLLM } = require("../services/geminiService");
+const { callGroqLLM} = require("../services/geminiService")
 const uploadResume = async (req, res) => {
   try {
     if (!req.file) {
@@ -62,7 +63,7 @@ Rules:
 `;
     const userPrompt = data.text;
     console.log("PDF Parsed");
-    const profile = await callGeminiLLM(systemPrompt, userPrompt);
+    const profile = await callGroqLLM(systemPrompt, userPrompt);
     console.log("Gemini Response:", profile);
 
     const profileData = {

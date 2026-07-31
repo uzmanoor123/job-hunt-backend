@@ -12,8 +12,13 @@ const getJobsFromJSearch = async (profile) => {
                 }
             }
         );
+        console.log("Status:", response.status);
+        console.log("Status Text:", response.statusText);
+
         const data = await response.json();
-        const jobs = (data.data.jobs || []).map((job) => ({
+        console.log("Response:", data);
+        console.log(`[+] data : `, data);
+        const jobs = (data?.data?.jobs || []).map((job) => ({
             id: job.job_id,
             title: job.job_title,
             company: job.employer_name || "Unknown",
@@ -26,7 +31,7 @@ const getJobsFromJSearch = async (profile) => {
                     ?.substring(0, 200) + "...",
             url: job.job_apply_link
         }));
-        
+
         return jobs;
     } catch (error) {
         console.log("JSearch Error:", error.message);
